@@ -21,8 +21,8 @@ const client = new Client({
 // client.connect();
 
 
-app.get("/stock", jsonParser, async function get_stock(req, res) {
-    url = "https://scanner.tradingview.com/america/scan"
+app.get("/stock/:countr", jsonParser, async function get_stock(req, res) {
+    url = `https://scanner.tradingview.com/${req.params.countr}/scan`
     var data = JSON.parse(fs.readFileSync("data/option_to_get_stocks.json", 'utf8'))
     data.markets.push('america');
     data = JSON.stringify(data)

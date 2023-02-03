@@ -1,9 +1,19 @@
 <template>
     <div class="dark-theme">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <select v-model="current_country" name="pets" id="pet-select">
+            <option v-for="countr in country" :key="countr">{{countr}}</option>
+        </select>
+        <button @click="get_stocks">click</button>
         <table>
             <transition-group name="fade" tag="tbody">
               <tr v-for="stock in stocks" :key="stock.s">
-                <td>{{ stock.d[0] }}</td>
+                <td>{{ stock.d[2] }}</td>
                 <td>{{ stock.d[1] }}</td>
                 <td>{{ stock.d[6] + ' ' + stock.d[7]}}</td>
                 <td>{{ stock.d[12] }}</td>
@@ -20,27 +30,39 @@ export default {
     data() {
         return {
             stocks: [],
+            country: [
+                    'america', 'argentina', 'bahrain', 'belgium',
+                    'brazil', 'uk', 'hungary', 'venezuela',
+                    'vietnam', 'germany', 'hongkong', 'greece',
+                    'denmark', 'egypt', 'israel', 'india',
+                    'indonesia', 'iceland', 'spain', 'italy',
+                    'canada', 'qatar', 'china', 'colombia',
+                    'latvia', 'lithuania', 'luxembourg', 'malaysia',
+                    'mexico', 'nigeria', 'netherlands', 'newzealand',
+                    'norway', 'uae', 'peru', 'poland',
+                    'portugal', 'russia', 'romania', 'ksa',
+                    'serbia', 'singapore', 'slovakia', 'thailand',
+                    'taiwan', 'turkey', 'philippines', 'finland',
+                    'france', 'chile', 'switzerland', 'sweden',
+                    'estonia', 'rsa', 'korea', 'japan'],
+            current_country: 'america'
         }
     },
 
     mounted() {
-      this.get_stocks().then((stocks) => {
-          this.stocks = stocks.data;
-        })
+      this.get_stocks();
       setInterval(() => {
-        this.get_stocks().then((stocks) => {
-          this.stocks = stocks.data;
-        })
+        this.get_stocks()
       }, 10000);
     },
 
     methods: {
         async get_stocks(){
-            return fetch('/stock', {
+            return fetch('/stock/' + this.current_country, {
               method: 'GET'
             })
-            .then(function(response) { return response.json(); });
-          },
+            .then(function(response) { return response.json(); }).then((stocks) => { this.stocks = stocks.data; });
+        },
     }
 }
 </script>
