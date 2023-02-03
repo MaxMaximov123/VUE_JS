@@ -9,7 +9,7 @@ var router = express.Router();
 const jsonParser = express.json();
 
 
-app.use(express.static(__dirname + "/dist"));
+// app.use(express.static(__dirname + "/dist"));
 const client = new Client({
     user: 'postgres',
     host: 'localhost',
@@ -39,11 +39,6 @@ app.get("/stock", jsonParser, async function get_stock(req, res) {
     res.send(response)
 })
 });
-
-app.get('/personal', function(req, res, next) {
-    res.sendFile(__dirname + "/public" + '/personal.html');
-});
-
 
 
 app.get('/data', (request, response) => {

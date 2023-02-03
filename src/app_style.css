@@ -3,38 +3,20 @@
     padding: 0;
     box-sizing: border-box;
 }
-
-.news {
-    border: 3px solid #1ddada;
-    padding: 15px;
-    margin-top: 15px;
+.app {
+    /*padding: 20px; */
+    background-color: #282c34;
+    height: 100%;
 }
 
-.body {
-    background-color: aquamarine;
-}
+.dark-theme {
+    background-color: #282c34;
+  }
+
 
 .input {
     padding: 10px 15px;
     width: 100%;
     border: 3px solid #1ddada;
     margin-top: 15px;
-}
-
-.app {
-    padding: 20px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.btn {
-    align-self: flex-end;
-    margin-top: 15px;
-    padding: 10px 15px;
-    background: none;
-    color: #1ddada;
-    border: solid #1ddada;
 }
