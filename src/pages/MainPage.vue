@@ -1,19 +1,13 @@
 <template>
     <div class="dark-theme">
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <select v-model="current_country" name="pets" id="pet-select">
-            <option v-for="countr in country" :key="countr">{{countr}}</option>
-        </select>
-        <button @click="get_stocks">click</button>
+        <default-select @create="select_country" :items="countries">
+          {{ country }}
+        </default-select>
+        <default-button @click="update_data_stocks">click</default-button>
         <table>
             <transition-group name="fade" tag="tbody">
               <tr v-for="stock in stocks" :key="stock.s">
-                <td>{{ stock.d[2] }}</td>
+                <td>{{ stock.d[0] }}</td>
                 <td>{{ stock.d[1] }}</td>
                 <td>{{ stock.d[6] + ' ' + stock.d[7]}}</td>
                 <td>{{ stock.d[12] }}</td>
@@ -30,7 +24,7 @@ export default {
     data() {
         return {
             stocks: [],
-            country: [
+            countries: [
                     'america', 'argentina', 'bahrain', 'belgium',
                     'brazil', 'uk', 'hungary', 'venezuela',
                     'vietnam', 'germany', 'hongkong', 'greece',
@@ -45,11 +39,13 @@ export default {
                     'taiwan', 'turkey', 'philippines', 'finland',
                     'france', 'chile', 'switzerland', 'sweden',
                     'estonia', 'rsa', 'korea', 'japan'],
-            current_country: 'america'
+            current_country: '',
+            req_country: ''
         }
     },
 
     mounted() {
+      this.current_country = this.req_country = this.countries[0]
       this.get_stocks();
       setInterval(() => {
         this.get_stocks()
@@ -58,21 +54,30 @@ export default {
 
     methods: {
         async get_stocks(){
-            return fetch('/stock/' + this.current_country, {
+            return fetch('/stock/' + this.req_country, {
               method: 'GET'
             })
             .then(function(response) { return response.json(); }).then((stocks) => { this.stocks = stocks.data; });
         },
+
+        select_country(country){
+          this.current_country = country;
+        },
+
+        update_data_stocks(){
+          this.req_country = this.current_country
+          this.get_stocks()
+        }
     }
 }
 </script>
 <style scoped>
 
 table {
-    position: absolute;
-    top: 20%;
-    left: 5%;
+    /* position: absolute;*/
+    margin:auto;
     width: 90%;
+    padding-left: 10%;
     color: aliceblue;
     font-size: 20px;
     border-collapse: collapse;
@@ -85,7 +90,4 @@ table {
     background-color: #373b48;
   }
 
-  .dark-theme {
-    background-color: #013fb9;
-  }
 </style>

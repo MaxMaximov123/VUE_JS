@@ -33,7 +33,7 @@ img {
     width: 100%;
     margin: 0 auto;
     background-color: rgb(90, 128, 199);
-    position: fixed;
+    position: static;
   }
   .logo-box {
     float: left;
@@ -67,7 +67,7 @@ img {
     font-size: 20px;
     text-decoration: none;
     display: block;
-    position: relative;
+    position: sticky;
     color: #ffffff;
     text-transform: uppercase;
   }
