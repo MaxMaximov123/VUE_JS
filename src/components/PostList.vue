@@ -4,7 +4,7 @@
         <PostItem
             v-for="newss in news"
             :key="newss.id"
-            :newss="newss"/>
+            :title="newss"/>
     </di>
 </template>
 <script>
