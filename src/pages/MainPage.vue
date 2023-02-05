@@ -1,5 +1,6 @@
 <template>
     <div class="dark-theme">
+        <check-list :items="fields"></check-list>
         <default-select @create="select_country" :items="countries">
           {{ country }}
         </default-select>
@@ -40,7 +41,16 @@ export default {
                     'france', 'chile', 'switzerland', 'sweden',
                     'estonia', 'rsa', 'korea', 'japan'],
             current_country: '',
-            req_country: ''
+            req_country: '',
+            range: [0, 50],
+            fields: [
+              {id: 0, name: "Цена1", status: true},
+              {id: 1, name: "Цена2", status: true},
+              {id: 2, name: "Цена3", status: true},
+              {id: 3, name: "Цена4", status: true},
+              {id: 4, name: "Цена5", status: true},
+
+            ]
         }
     },
 
@@ -54,7 +64,7 @@ export default {
 
     methods: {
         async get_stocks(){
-            return fetch('/stock/' + this.req_country, {
+            return fetch(`api/stock/?country=${this.req_country}&range=${this.range.join(':')}`, {
               method: 'GET'
             })
             .then(function(response) { return response.json(); }).then((stocks) => { this.stocks = stocks.data; });

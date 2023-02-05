@@ -33,7 +33,6 @@ export default {
 <style scoped lang="scss">
 
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
-@import url("https://fonts.gstatic.com");
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Play&display=swap');
 /*.footer {
   position:sticky;

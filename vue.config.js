@@ -3,7 +3,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
     proxy: {
-      "/stock": {
+      "api/stock": {
           target: "http://localhost:3002",
       }
     }

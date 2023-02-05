@@ -51,12 +51,10 @@
     "options": {
         "lang": "ru"
     },
-    "range": [0, 50],
+    "range": [],
     "sort": {
         "sortBy": "name",
         "sortOrder": "asc"
     },
-    "markets": [
-        "russia"
-    ]
+    "markets": []
 }

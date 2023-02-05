@@ -21,9 +21,9 @@ export default {
         }
     },
   methods: {
-        selected() {
+        /* selected() {
           this.$emit('change', this.status, this.id);
-        }
+        } */
     },
     
 }

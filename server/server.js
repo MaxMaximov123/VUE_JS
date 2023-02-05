@@ -21,9 +21,11 @@ const client = new Client({
 // client.connect();
 
 
-app.get("/stock/:countr", jsonParser, async function get_stock(req, res) {
-    url = `https://scanner.tradingview.com/${req.params.countr}/scan`
-    var data = JSON.parse(fs.readFileSync("data/option_to_get_stocks.json", 'utf8'))
+app.get("/api/stock/", jsonParser, async function get_stock(req, res) {
+    const params = req.query
+    url = `https://scanner.tradingview.com/${params.country}/scan`
+    var data = JSON.parse(fs.readFileSync("data/option_to_get_stocks.json", 'utf8'));
+    data.range = params.range.split(':').map(Number)
     data.markets.push('america');
     data = JSON.stringify(data)
     fetch(url, {
@@ -35,9 +37,8 @@ app.get("/stock/:countr", jsonParser, async function get_stock(req, res) {
     body: data
 })
 .then(response => response.json())
-.then(response => {
-    res.send(response)
-})
+.then(response => {res.send(response)})
+.catch(() => console.log('some error'));
 });
 
 
