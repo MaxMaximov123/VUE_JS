@@ -2,7 +2,7 @@
     <div container>
         <check-box
             v-for="item in items"
-            :key="item.id" @change="update_checked" :id="item.id" :status_="item.status">{{ item.name }}</check-box>
+            :key="item.id" @change="update_checked" :id="item.id" :base_status="item.status">{{ item.name }}</check-box>
     </div>
 </template>
 <script>

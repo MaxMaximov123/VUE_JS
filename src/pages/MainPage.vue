@@ -8,6 +8,7 @@
         <table>
             <transition-group name="fade" tag="tbody">
               <tr v-for="stock in stocks" :key="stock.s">
+                <td><img class="logo" :src="get_logo(stock.d[2])"></td>
                 <td>{{ stock.d[0] }}</td>
                 <td>{{ stock.d[1] }}</td>
                 <td>{{ stock.d[6] + ' ' + stock.d[7]}}</td>
@@ -59,7 +60,7 @@ export default {
       this.get_stocks();
       setInterval(() => {
         this.get_stocks()
-      }, 10000);
+      }, 20000);
     },
 
     methods: {
@@ -77,11 +78,22 @@ export default {
         update_data_stocks(){
           this.req_country = this.current_country
           this.get_stocks()
+        },
+
+        get_logo(logoid){
+          if (logoid) return `https://s3-symbol-logo.tradingview.com/${logoid}.svg`
+          return 'https://cdn-icons-png.flaticon.com/128/6516/6516128.png'
         }
     }
 }
 </script>
 <style scoped>
+
+.logo{
+  width: 40px;
+  background-color: #a0a0a0;
+  border-radius: 50%;
+}
 
 table {
     /* position: absolute;*/

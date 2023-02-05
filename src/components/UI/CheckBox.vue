@@ -7,23 +7,24 @@
 <script>
 export default {
   name: 'check-box',
-  data() {
-        return {
-          status: this.status_,
-        }
-    },
   props: {
         id: {
           required: true
         },
-        status_: {
+        base_status: {
           required: true
         }
     },
+  data() {
+      return {
+        status: true || true,
+      }
+  },
   methods: {
-        /* selected() {
-          this.$emit('change', this.status, this.id);
-        } */
+        selected() {
+          console.log(this.status)
+          /* this.$emit('change', this.status, this.id); */
+        }
     },
     
 }
