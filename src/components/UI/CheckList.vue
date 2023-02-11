@@ -2,7 +2,7 @@
     <div container>
         <check-box
             v-for="item in items"
-            :key="item.id" @change="update_checked" :id="item.id" :base_status="item.status">{{ item.name }}</check-box>
+            :key="item.id" @change="update_checked" :data_status="item"></check-box>
     </div>
 </template>
 <script>
@@ -24,8 +24,8 @@ export default {
     components: { CheckBox },
 
     methods: {
-        update_checked(status, id){
-            this.statuses[id].status = status;
+        update_checked(status){
+            this.statuses[status.id] = status;
             this.$emit('update', this.statuses);
         }
     },

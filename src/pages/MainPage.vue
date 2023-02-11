@@ -1,6 +1,7 @@
 <template>
+    <h1>{{ $route.params }}</h1>
     <div class="dark-theme">
-        <check-list :items="fields"></check-list>
+        <check-list :items="fields" @update="update_fields"></check-list>
         <default-select @create="select_country" :items="countries">
           {{ country }}
         </default-select>
@@ -41,14 +42,15 @@ export default {
                     'taiwan', 'turkey', 'philippines', 'finland',
                     'france', 'chile', 'switzerland', 'sweden',
                     'estonia', 'rsa', 'korea', 'japan'],
-            current_country: '',
+            current_country: this.$route.params.country,
             req_country: '',
-            range: [0, 50],
+            step: 50,
+            range: [],
             fields: [
-              {id: 0, name: "Цена1", status: true},
+              {id: 0, name: "Цена1", status: false},
               {id: 1, name: "Цена2", status: true},
               {id: 2, name: "Цена3", status: true},
-              {id: 3, name: "Цена4", status: true},
+              {id: 3, name: "Цена4", status: false},
               {id: 4, name: "Цена5", status: true},
 
             ]
@@ -56,7 +58,8 @@ export default {
     },
 
     mounted() {
-      this.current_country = this.req_country = this.countries[0]
+      this.range = [Number(this.$route.params.page) * this.step, Number(this.$route.params.page) * this.step + this.step]
+      this.req_country = this.current_country
       this.get_stocks();
       setInterval(() => {
         this.get_stocks()
@@ -65,7 +68,7 @@ export default {
 
     methods: {
         async get_stocks(){
-            return fetch(`api/stock/?country=${this.req_country}&range=${this.range.join(':')}`, {
+            return fetch(`../../../api/stock/?country=${this.req_country}&range=${this.range.join(':')}`, {
               method: 'GET'
             })
             .then(function(response) { return response.json(); }).then((stocks) => { this.stocks = stocks.data; });
@@ -74,6 +77,11 @@ export default {
         select_country(country){
           this.current_country = country;
         },
+
+        update_fields(fields1){
+          this.fields = fields1
+        },
+
 
         update_data_stocks(){
           this.req_country = this.current_country

@@ -1,6 +1,6 @@
 <template>
-    <label class="container"><slot></slot>
-        <input v-model="status" type="checkbox" @change="selected">
+    <label class="container">{{ data_status.name }}
+        <input v-model="status.status" type="checkbox" @change="selected">
         <span class="checkmark"></span>
     </label>
 </template>
@@ -8,24 +8,22 @@
 export default {
   name: 'check-box',
   props: {
-        id: {
-          required: true
-        },
-        base_status: {
+        data_status: {
+          type: Object,
           required: true
         }
     },
   data() {
       return {
-        status: true || true,
+        status: this.data_status,
       }
   },
   methods: {
         selected() {
-          console.log(this.status)
-          /* this.$emit('change', this.status, this.id); */
+          this.$emit('change', this.status);
         }
     },
+  
     
 }
 </script>
