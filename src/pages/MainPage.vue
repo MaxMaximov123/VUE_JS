@@ -1,28 +1,30 @@
 <template>
   <div class="dark-theme">
-    <check-list :items="columns" @update="update_columns"></check-list>
-    <default-select @create="select_country" :items="countries">
+    <default-select @create="select_country" :items="countries" :current="current_country">
       {{ country }}
     </default-select>
-    <div class="table-container">
-      <table>
-        <transition-group name="fade" tag="tbody">
-          <thead>
-            <tr v-if="true">
-              <th class="head-col">Logo</th>
-              <th class="head-col" v-show="columns[column_id - 1].status" v-for="column_id in 2" :key="column_id">{{ columns[column_id - 1].name }}</th>
-              <th v-show="columns[column_id + 1].status" v-for="column_id in (columns.length - 2)" :key="column_id">{{ columns[column_id + 1].name }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="stock in stocks" :key="stock.s">
-              <th><img class="logo" :src="get_logo(stock.d[2])"></th>
-              <th class="head-row" v-show="columns[data_col - 1].status" v-for="data_col in 2" :key="data_col">{{ stock.d[data_col - 1] }}</th>
-              <td v-show="columns[data_col + 1].status" v-for="data_col in (stock.d.length - 2)" :key="data_col">{{ stock.d[data_col + 1] }}</td>
-            </tr>
-          </tbody>
-        </transition-group>
-      </table>
+    <div id="div_top_hypers">
+      <div class="table-container">
+        <table>
+          <!-- <transition-group name="fade1" tag="thead"> -->
+            <thead>
+              <tr v-if="1">
+                <th class="head-col">Logo</th>
+                <th class="head-col" v-show="columns[column_id - 1].status" v-for="column_id in 2" :key="`1_${column_id}`">{{ columns[column_id - 1].name }}</th>
+                <th v-show="columns[column_id + 1].status" v-for="column_id in (columns.length - 2)" :key="`2_${column_id}`">{{ columns[column_id + 1].name }}</th>
+              </tr>
+            </thead>
+            <tbody v-if="1">
+              <tr v-for="stock in stocks" :key="stock.s">
+                <th><img class="logo" :src="get_logo(stock.d[2])"></th>
+                <th class="head-row" v-show="columns[data_col - 1].status" v-for="data_col in 2" :key="`3_${data_col}`">{{ stock.d[data_col - 1] }}</th>
+                <td v-show="columns[data_col + 1].status" v-for="data_col in (stock.d.length - 2)" :key="`4_${data_col}`">{{ stock.d[data_col + 1] }}</td>
+              </tr>
+            </tbody>
+          <!-- </transition-group> -->
+        </table>
+      </div>
+    <li><check-list :items="columns" @update="update_columns"></check-list></li>
     </div>
   </div>
 </template>
@@ -30,6 +32,7 @@
 export default {
   data() {
     return {
+      socket: null,
       stocks: [],
       countries: [
         'america', 'argentina', 'bahrain', 'belgium',
@@ -51,8 +54,8 @@ export default {
       step: 50,
       range: [],
       columns: [
-        {id: 0, name: 'name', status: true, show: true},
-        {id: 1, name: 'description', status: true, show: true},
+        {id: 0, name: 'name', status: true, show: false},
+        {id: 1, name: 'description', status: true, show: false},
         {id: 2, name: 'logoid', status: false, show: false},
         {id: 3, name: 'update_mode', status: false, show: false},
         {id: 4, name: 'type', status: false, show: false},
@@ -80,26 +83,44 @@ export default {
   },
 
   mounted() {
+    /* WEBSOCKE INIT */
+    this.socket = new WebSocket('ws://localhost:8000/stocks');
+
+    this.socket.onmessage = (event) => {
+      this.stocks = JSON.parse(event.data);
+    };
+
+    this.socket.onclose = () => {
+      console.log('WebSocket connection closed!');
+      this.socket = new WebSocket('ws://localhost:8000/stocks');
+    };
+
+    this.socket.onopen = () => {
+      this.socket.send(JSON.stringify({type: 'stocks', range: this.range, country: this.req_country}));
+    }
+
+    /* -------------------------------------- */
+
     this.range = [Number(this.$route.params.page) * this.step, Number(this.$route.params.page) * this.step + this.step]
     this.req_country = this.current_country
-    this.get_stocks();
     setInterval(() => {
-      this.get_stocks()
-    }, 20000);
+      this.socket.send(JSON.stringify({type: 'stocks', range: this.range, country: this.req_country}));
+    }, 2000);
   },
 
   methods: {
-    async get_stocks() {
-      return fetch(`../../../api/stock/?country=${this.req_country}&range=${this.range.join(':')}`, {
+    /* async get_stocks() {
+      this.socket.send('get_stocks');
+        return fetch(`../../../api/stock/?country=${this.req_country}&range=${this.range.join(':')}`, {
         method: 'GET'
       })
         .then(function (response) { return response.json(); }).then((stocks) => {this.stocks = stocks.data;});
-    },
+    }, */
 
     select_country(country) {
       this.req_country = this.current_country = country
       this.range = [Number(this.$route.params.page) * this.step, Number(this.$route.params.page) * this.step + this.step]
-      this.get_stocks();
+      this.socket.send(JSON.stringify({type: 'stocks', range: this.range, country: this.req_country}));
       this.$router.push(`/stocks/${this.current_country}/0`)
     },
 
@@ -116,10 +137,10 @@ export default {
 </script>
 <style scoped>
 .logo {
-  position: -webkit-sticky;
-  position: sticky;
+/*   position: -webkit-sticky;
+  position: sticky; */
   z-index: 3;
-  left: 0px; 
+  left: 0 ;
   width: 40px;
   background-color: #a0a0a0;
   border-radius: 40%;
@@ -175,10 +196,13 @@ tbody {
 .head-row {
   position: -webkit-sticky;
   position:sticky;
+  left: 0;
   z-index: 3;
 }
 
 .table-container {
+  scrollbar-track-color: aqua;
+  scrollbar-face-color: aqua;
   position: relative;
   max-height:  900px;
   width: 100%;
@@ -187,5 +211,13 @@ tbody {
 
 .dark-theme {
   margin: 50px;
+}
+
+#div_top_hypers {
+    background-color:#eeeeee;
+    display:inline;      
+}
+#ul_top_hypers li{
+    display: inline;
 }
 </style>

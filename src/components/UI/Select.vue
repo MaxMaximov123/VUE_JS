@@ -10,11 +10,15 @@ export default {
         items: {
             type: Object,
             required: true
+        },
+        current: {
+            type: String,
+            required: true
         }
     },
     data() {
         return {
-            current_item: this.items[0]
+            current_item: this.current
         }
     },
 

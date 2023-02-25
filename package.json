@@ -14,8 +14,13 @@
     "https": "^1.0.0",
     "pg": "^8.9.0",
     "serve": "^14.2.0",
+    "socket.io-client": "^4.6.1",
+    "socketio": "^1.0.0",
     "vue": "^3.2.45",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.0.13",
+    "vue-socket.io": "^3.0.10",
+    "websocket": "^1.0.34",
+    "ws": "^8.12.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
